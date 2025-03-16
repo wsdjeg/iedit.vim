@@ -10,7 +10,10 @@ with [nvim-plug](https://github.com/wsdjeg/nvim-plug)
 
 ```lua
 require('plug').add({
-    { 'wsdjeg/iedit.nvim' }
+  'wsdjeg/iedit.nvim',
+  config = function()
+    vim.keymap.set('n', '<leader>e', "<cmd>lua require('iedit').start()<cr>", { silent = true })
+  end,
 })
 ```
 
