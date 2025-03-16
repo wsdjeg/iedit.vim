@@ -65,7 +65,7 @@ local getline = vim.fn.getline
 local timer_start = vim.fn.timer_start
 
 local function echo(msg) -- {{{
-  local ok, nt = pcall(require, 'notify')
+  local ok, nt = pcall(require, 'spacevim.api.notify')
   if ok then
     nt.notify(msg)
   else
