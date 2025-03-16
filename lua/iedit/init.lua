@@ -65,8 +65,12 @@ local getline = vim.fn.getline
 local timer_start = vim.fn.timer_start
 
 local function echo(msg) -- {{{
-  vim.g._spacevim_temp_msg = msg
-  vim.api.nvim_eval('SpaceVim#api#notify#get().notify(g:_spacevim_temp_msg, "None")')
+  local ok, nt = pcall(require, 'notify')
+  if ok then
+    nt.notify(msg)
+  else
+    vim.notify(msg)
+  end
 end
 -- }}}
 
