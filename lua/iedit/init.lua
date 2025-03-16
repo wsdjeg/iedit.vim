@@ -721,5 +721,3 @@ end
 -- }}}
 
 return M
-
--- vim:set et sw=2 cc=80 foldmethod=marker foldmarker={{{,}}}:
