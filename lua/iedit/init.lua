@@ -61,7 +61,6 @@ end
 
 local matchstr = vim.fn.matchstr
 local substitute = vim.fn.substitute
-local range = vim.fn.range
 local getline = vim.fn.getline
 local timer_start = vim.fn.timer_start
 
@@ -156,7 +155,7 @@ local function replace_symbol() -- {{{
 end
 -- }}}
 
-local function reset_Operator(...) -- {{{
+local function reset_Operator() -- {{{
   Operator = ''
 end
 -- }}}
@@ -543,7 +542,6 @@ end
 --- }}}
 
 local function parse_symbol(_begin, _end, symbol, use_expr, selectall) -- {{{
-  local len = #symbol
   local cursor = { vim.fn.line('.'), vim.fn.col('.') }
   for _, l in ipairs(vim.fn.range(_begin, _end)) do
     local line = vim.fn.getline(l)
@@ -614,14 +612,14 @@ local function handle_register(char) -- {{{
 end
 -- }}}
 
-local function handle(mode, char) -- {{{
-  if mode == 'n' and Operator == 'f' then
+local function handle(m, char) -- {{{
+  if m == 'n' and Operator == 'f' then
     handle_f_char(char)
-  elseif mode == 'n' then
+  elseif m == 'n' then
     handle_normal(char)
-  elseif mode == 'i' and Operator == 'r' then
+  elseif m == 'i' and Operator == 'r' then
     handle_register(char)
-  elseif mode == 'i' then
+  elseif m == 'i' then
     handle_insert(char)
   end
 end
@@ -629,7 +627,7 @@ end
 
 function M.start(...) -- {{{
   local args = { ... }
-  argv = args[1] or ''
+  local argv = args[1] or ''
   local selectall = true
   local use_expr = false
   if
@@ -650,7 +648,7 @@ function M.start(...) -- {{{
   local cursor_hi = util.group2dict('Cursor')
   iedit_cursor_hi_info = vim.fn.deepcopy(cursor_hi)
   iedit_cursor_hi_info.name = 'SpaceVimGuideCursor'
-  lcursor_hi = util.group2dict('lCursor')
+  local lcursor_hi = util.group2dict('lCursor')
   local guicursor = vim.o.guicursor
   util.hide_in_normal('Cursor')
   util.hide_in_normal('lCursor')
@@ -660,6 +658,7 @@ function M.start(...) -- {{{
   mode = 'n'
   vim.w.spacevim_iedit_mode = mode
   vim.w.spacevim_statusline_mode = 'in'
+  local symbol = ''
   if #cursor_stack == 0 then
     local curpos = vim.fn.getpos('.')
     local save_reg_k = vim.api.nvim_eval('@"')
@@ -696,7 +695,7 @@ function M.start(...) -- {{{
     if mode == 'n' and char == util.t('<Esc>') then
       mode = ''
     else
-      local symbol = handle(mode, char)
+      symbol = handle(mode, char)
     end
   end
   if #cursor_stack == 0 then
