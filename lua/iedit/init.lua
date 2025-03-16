@@ -14,7 +14,7 @@ local util = require('iedit.util')
 
 -- Local Variable {{{
 
-local logger = require('spacevim.logger').derive('iedit')
+local logger = require('iedit.logger')
 
 local index = -1
 local cursor_col = -1
